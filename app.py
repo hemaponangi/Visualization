@@ -1,59 +1,38 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 
-st.title("Visualization Techniques")
+# Title
+st.title("📊 Simple Data Visualization App")
 
-# Load dataset (Iris)
-st.write("### Sample Dataset: Iris")
-df = sns.load_dataset("iris")
-st.dataframe(df.head())
+# File uploader
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
-# Dropdown to choose chart
-chart = st.selectbox(
-    "Choose Visualization",
-    ["Histogram (1D)", "Scatter Plot (2D)", "Line Plot (2D)", "3D Scatter Plot"]
-)
+if uploaded_file is not None:
+    # Read file
+    df = pd.read_csv(uploaded_file)
 
-if chart == "Histogram (1D)":
-    col = st.selectbox("Select numeric column", df.select_dtypes(include=np.number).columns)
-    fig, ax = plt.subplots()
-    ax.hist(df[col], bins=10, color="skyblue", edgecolor="black")
-    ax.set_title(f"Histogram of {col}")
-    st.pyplot(fig)
+    # Show data
+    st.write("### Preview of Data")
+    st.dataframe(df.head())
 
-elif chart == "Scatter Plot (2D)":
-    x = st.selectbox("X-axis", df.select_dtypes(include=np.number).columns)
-    y = st.selectbox("Y-axis", df.select_dtypes(include=np.number).columns)
-    fig, ax = plt.subplots()
-    ax.scatter(df[x], df[y], c="blue", alpha=0.6)
-    ax.set_xlabel(x)
-    ax.set_ylabel(y)
-    ax.set_title(f"Scatter Plot: {x} vs {y}")
-    st.pyplot(fig)
+    # Select column for visualization
+    numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns
+    if len(numeric_columns) > 0:
+        col = st.selectbox("Select a column to visualize", numeric_columns)
 
-elif chart == "Line Plot (2D)":
-    col = st.selectbox("Select numeric column", df.select_dtypes(include=np.number).columns)
-    fig, ax = plt.subplots()
-    ax.plot(df[col], marker="o", linestyle="-", color="green")
-    ax.set_title(f"Line Plot of {col}")
-    st.pyplot(fig)
+        # Plot histogram
+        fig, ax = plt.subplots()
+        ax.hist(df[col], bins=20, color='skyblue', edgecolor='black')
+        ax.set_title(f"Distribution of {col}")
+        st.pyplot(fig)
 
-else:  # 3D Scatter Plot
-    from mpl_toolkits.mplot3d import Axes3D
+        # Show line chart
+        st.write("### Line Chart")
+        st.line_chart(df[col])
+    else:
+        st.warning("No numeric columns found for visualization.")
+else:
+    st.info("👆 Upload a CSV file to get started.")
 
-    x = "sepal_length"
-    y = "sepal_width"
-    z = "petal_length"
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection="3d")
-    ax.scatter(df[x], df[y], df[z], c="red", marker="o")
-    ax.set_xlabel(x)
-    ax.set_ylabel(y)
-    ax.set_zlabel(z)
-    ax.set_title("3D Scatter Plot")
-    st.pyplot(fig)
 
