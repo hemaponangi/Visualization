@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-st.title("Correlation Heatmap")
+st.title("Correlation Heatmap Visualization")
 
 # File uploader
 uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
@@ -26,3 +26,4 @@ if uploaded_file is not None:
         st.pyplot(fig)
     else:
         st.warning("Dataset must have at least 2 numeric columns for a heatmap.")
+
