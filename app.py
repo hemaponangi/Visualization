@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-st.title("DV Assignment - Visualization Techniques")
+st.title("Visualization Techniques")
 
 # Load dataset (Iris)
 st.write("### Sample Dataset: Iris")
@@ -56,3 +56,4 @@ else:  # 3D Scatter Plot
     ax.set_zlabel(z)
     ax.set_title("3D Scatter Plot")
     st.pyplot(fig)
+
