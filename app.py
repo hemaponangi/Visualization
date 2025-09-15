@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 
-st.title("Pie Chart Visualization")
+st.title("Correlation Heatmap Visualization")
 
 # Upload CSV file
 uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
@@ -13,14 +14,18 @@ if uploaded_file is not None:
     st.write("### Dataset Preview")
     st.write(df.head())
 
-    # Select column for pie chart
-    column = st.selectbox("Select a column for Pie Chart", df.columns)
+    # Keep only numeric columns
+    numeric_df = df.select_dtypes(include=['number'])
 
-    # Count values
-    counts = df[column].value_counts()
+    if numeric_df.shape[1] > 1:  # Need at least 2 numeric columns
+        st.write("### Correlation Heatmap")
 
-    # Plot Pie Chart
-    fig, ax = plt.subplots()
-    ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')  # Equal aspect ratio ensures the pie is a circle.
-    st.pyplot(fig)
+        corr = numeric_df.corr()
+
+        fig, ax = plt.subplots()
+        sns.heatmap(corr, annot=True, cmap="coolwarm", ax=ax)
+        st.pyplot(fig)
+    else:
+        st.warning("The dataset must have at least two numeric columns for a heatmap.")
+
+
